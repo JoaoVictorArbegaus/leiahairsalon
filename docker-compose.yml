@@ -1,0 +1,10 @@
+# Sobe a landing do Léia Salão: docker compose up -d --build
+# Abre em http://localhost:8080 (outra porta: PORTA=3000 docker compose up -d --build)
+name: leia-salao
+services:
+  site:
+    build: .
+    image: leia-salao-landing:latest
+    ports:
+      - "${PORTA:-8080}:80"
+    restart: unless-stopped
