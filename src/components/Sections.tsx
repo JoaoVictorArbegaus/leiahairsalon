@@ -147,7 +147,7 @@ export function About() {
 export function Houses() {
   return (
     <section className="houses" id="casas" aria-labelledby="casas-titulo">
-      <LineWaves color1="#B49B3E" color2="#C9B566" color3="#6F5F25" brightness={0.08} speed={0.2} rotation={-24} innerLineCount={24} outerLineCount={28} mouseInfluence={1.2} />
+      <LineWaves color1="#B49B3E" color2="#C9B566" color3="#6F5F25" brightness={0.08} speed={0.2} rotation={-24} innerLineCount={24} outerLineCount={28} />
       <div className="wrap houses__head">
         <Title id="casas-titulo" text={casasSecao.titulo} />
         <Reveal className="lead" i={1}>

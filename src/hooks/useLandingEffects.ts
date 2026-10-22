@@ -66,8 +66,18 @@ export function useLandingEffects() {
     // (data-tilt = inclinação máxima em graus). Só com mouse; sem inclinação com movimento reduzido.
     document.querySelectorAll<HTMLElement>('.tilt').forEach((card) => {
       const max = reduce ? 0 : Number(card.dataset.tilt || 0);
+      // o mouse dispara vários pointermove por quadro: guarda o último e aplica uma vez por quadro
+      let pending: PointerEvent | null = null;
+      let frame = 0;
       const move = (e: PointerEvent) => {
         if (e.pointerType !== 'mouse') return;
+        pending = e;
+        if (!frame) frame = requestAnimationFrame(apply);
+      };
+      const apply = () => {
+        frame = 0;
+        const e = pending;
+        if (!e) return;
         const r = card.getBoundingClientRect();
         const x = e.clientX - r.left;
         const y = e.clientY - r.top;
@@ -83,7 +93,12 @@ export function useLandingEffects() {
         }
         card.style.setProperty('--glow', '1');
       };
-      const leave = () => ['--mx', '--my', '--rx', '--ry', '--glow', '--edge-proximity', '--cursor-angle'].forEach((v) => card.style.removeProperty(v));
+      const leave = () => {
+        pending = null;
+        cancelAnimationFrame(frame);
+        frame = 0;
+        ['--mx', '--my', '--rx', '--ry', '--glow', '--edge-proximity', '--cursor-angle'].forEach((v) => card.style.removeProperty(v));
+      };
       card.addEventListener('pointermove', move);
       card.addEventListener('pointerleave', leave);
       cleanups.push(() => {
